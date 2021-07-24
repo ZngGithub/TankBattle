@@ -16,4 +16,23 @@ import lombok.NoArgsConstructor;
 public class Tank {
     private int x;
     private int y;
+    private int direction;
+    private int moveNum;
+    private int type;
+
+    public void moveUp() {
+        this.y -= moveNum;
+    }
+
+    public void moveRight() {
+        this.x += moveNum;
+    }
+
+    public void moveDown() {
+        this.y += moveNum;
+    }
+
+    public void moveLeft() {
+        this.x -= moveNum;
+    }
 }
