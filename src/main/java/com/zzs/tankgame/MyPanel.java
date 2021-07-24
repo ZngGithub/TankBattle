@@ -1,4 +1,4 @@
-package com.zzs.hspedu;
+package com.zzs.tankgame;
 
 import lombok.Data;
 
@@ -6,7 +6,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.security.Key;
 import java.util.Vector;
 
 /**
@@ -16,17 +15,23 @@ import java.util.Vector;
  * @description：游戏绘图区
  */
 @Data
-public class MyPanel extends JPanel implements KeyListener {
+public class MyPanel extends JPanel implements KeyListener, Runnable {
     // 定义自己的坦克
     MyTank myTank = null;
+    // 定义子弹
+    Bullet bullet = null;
     private Vector<EnemyTank> vector = new Vector(); // 敌人坦克
     private int enemyNum = 3; // 默认三个敌人
 
     public MyPanel() {
+        // 初始化坦克
         myTank = new MyTank(100, 100, 0, 6, 0);
+
+        // 初始化敌方坦克
         for (int i = 0; i < enemyNum; i++) {
             vector.add(new EnemyTank( i * 100, 0));
         }
+
     }
 
     @Override
@@ -40,7 +45,16 @@ public class MyPanel extends JPanel implements KeyListener {
         for (EnemyTank enemyTank : vector) {
             drawTank(enemyTank.getX(), enemyTank.getY(), g, enemyTank.getDirection(), enemyTank.getType());
         }
+
+        // 绘画子弹
+        if (myTank.getBullet() != null && myTank.getBullet().isLive()) {
+            g.setColor(Color.white);
+//            g.fill3DRect(myTank.getBullet().getX(), myTank.getBullet().getY(), 10, 10, false);
+            g.draw3DRect(myTank.getBullet().getX(), myTank.getBullet().getY(), 10, 10, false);
+        }
+
     }
+
 
     /**
      * @param x         x坐标
@@ -98,7 +112,7 @@ public class MyPanel extends JPanel implements KeyListener {
 
     }
 
-    // 处理 键盘映射
+    // 处理键盘映射
     @Override
     public void keyPressed(KeyEvent e) {
         // WSAD 进行坦克方向处理, 处理坐标
@@ -115,11 +129,35 @@ public class MyPanel extends JPanel implements KeyListener {
             myTank.setDirection(3);
             myTank.moveLeft();
         }
+
+        if (e.getKeyCode() == KeyEvent.VK_J) {
+            for (int i = 0; i < 100; i++) {
+                // 发射子弹
+                myTank.shotEnemyTank();
+            }
+
+        }
+
+
+        // 进行重新绘画
         this.repaint();
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
 
+    }
+
+    @Override
+    public void run() {
+        while (true) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            // 原则重绘子弹
+            this.repaint();
+        }
     }
 }

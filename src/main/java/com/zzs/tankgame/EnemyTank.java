@@ -1,6 +1,4 @@
-package com.zzs.hspedu;
-
-import java.awt.*;
+package com.zzs.tankgame;
 
 /**
  * @author ：zzs
@@ -11,6 +9,6 @@ import java.awt.*;
 public class EnemyTank extends MyTank {
 
     public EnemyTank(int x, int y) {
-       super(x, y, 2, 6, 1);
+        super(x, y, 2, 6, 1);
     }
 }

@@ -1,4 +1,4 @@
-package com.zzs.hspedu;
+package com.zzs.tankgame;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,9 +16,9 @@ import lombok.NoArgsConstructor;
 public class Tank {
     private int x;
     private int y;
-    private int direction;
-    private int moveNum;
-    private int type;
+    private int direction; //方向
+    private int moveNum; // 移动单位
+    private int type; // 类型
 
     public void moveUp() {
         this.y -= moveNum;
@@ -35,4 +35,7 @@ public class Tank {
     public void moveLeft() {
         this.x -= moveNum;
     }
+
+
+
 }

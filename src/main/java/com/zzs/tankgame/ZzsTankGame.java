@@ -1,7 +1,6 @@
-package com.zzs.hspedu;
+package com.zzs.tankgame;
 
 import javax.swing.*;
-import java.util.Vector;
 
 /**
  * @author ：zzs
@@ -9,13 +8,16 @@ import java.util.Vector;
  * @date ：Created in 2021/7/24 15:25
  * @description：
  */
-public class HspTankGame extends JFrame {
+public class ZzsTankGame extends JFrame {
     private MyPanel mp;
     public static void main(String[] args) {
-        new HspTankGame();
+        new ZzsTankGame();
     }
-    public HspTankGame() {
+
+    public ZzsTankGame() {
         mp = new MyPanel();
+        Thread thread = new Thread(mp); // 子弹重绘线程
+        thread.start();
         this.add(mp);
         this.addKeyListener(mp); // 增加键盘监听事件
         this.setSize(1000, 750); // 设置界面大小
