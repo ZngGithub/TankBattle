@@ -2,6 +2,8 @@ package com.zzs.tankgame;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @author ：zzs
  * @version : 1.0
@@ -11,6 +13,7 @@ import lombok.Data;
 @Data
 public class MyTank extends Tank{
     private Bullet bullet;
+
 
     public MyTank(int x, int y, int direction, int moveNum, int type) {
         super(x, y, direction, moveNum, type);

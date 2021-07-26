@@ -13,7 +13,7 @@ public class Bullet implements Runnable{
     private int x;
     private int y;
     private int direction;
-    private int speed = 50;
+    private int speed = 10;
     private boolean isLive = true; //是否存活
 
     public Bullet(int x, int y, int direction) {

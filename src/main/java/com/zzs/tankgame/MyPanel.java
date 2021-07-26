@@ -20,7 +20,7 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
     MyTank myTank = null;
     // 定义子弹
     Bullet bullet = null;
-    private Vector<EnemyTank> vector = new Vector(); // 敌人坦克
+    private Vector<EnemyTank> enemyTanks = new Vector(); // 敌人坦克
     private int enemyNum = 3; // 默认三个敌人
 
     public MyPanel() {
@@ -29,7 +29,13 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
 
         // 初始化敌方坦克
         for (int i = 0; i < enemyNum; i++) {
-            vector.add(new EnemyTank( i * 100, 0));
+            EnemyTank enemyTank = new EnemyTank(i * 100, 0);
+            // 初始化子弹 默认朝下
+            Bullet bullet = new Bullet(enemyTank.getX() + 20, enemyTank.getY() + 60, enemyTank.getDirection());
+            enemyTank.bullets.add(bullet);
+            new Thread(bullet).start();
+            // 添加坦克
+            enemyTanks.add(enemyTank);
         }
 
     }
@@ -42,8 +48,14 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
         drawTank(myTank.getX(), myTank.getY(), g, myTank.getDirection(), myTank.getType());
 
         // 画出所有敌人
-        for (EnemyTank enemyTank : vector) {
+        for (EnemyTank enemyTank : enemyTanks) {
             drawTank(enemyTank.getX(), enemyTank.getY(), g, enemyTank.getDirection(), enemyTank.getType());
+            for (int i = 0; i < enemyTank.bullets.size(); i++) {
+                Bullet bullet = enemyTank.bullets.get(i);
+                if (bullet.isLive()) {
+                    g.draw3DRect(bullet.getX(), bullet.getY(), 10, 10, false);
+                }
+            }
         }
 
         // 绘画子弹
@@ -137,8 +149,6 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
             }
 
         }
-
-
         // 进行重新绘画
         this.repaint();
     }
