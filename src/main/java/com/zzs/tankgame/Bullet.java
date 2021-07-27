@@ -14,7 +14,7 @@ public class Bullet implements Runnable{
     private int y;
     private int direction;
     private int speed = 10;
-    private boolean isLive = true; //是否存活
+    public boolean isLive = true; //是否存活
 
     public Bullet(int x, int y, int direction) {
         this.x = x;
@@ -45,7 +45,7 @@ public class Bullet implements Runnable{
                     x -= speed;
                     break;
             }
-            System.out.println("子弹x="+ x + "\n" + "y=" + y);
+//            System.out.println("子弹x="+ x + "\n" + "y=" + y);
             // 到达边界退出循环
             if (!(x >= 0 && x <= 1000 && y >= 0 && y <= 750)) {
                 isLive = false;

@@ -20,6 +20,17 @@ public class Tank {
     private int moveNum; // 移动单位
     private int type; // 类型
 
+    public Tank(int x, int y, int direction, int moveNum, int type) {
+        this.x = x;
+        this.y = y;
+        this.direction = direction;
+        this.moveNum = moveNum;
+        this.type = type;
+    }
+
+    // 生命周期
+    public boolean isLife = true;
+
     public void moveUp() {
         this.y -= moveNum;
     }

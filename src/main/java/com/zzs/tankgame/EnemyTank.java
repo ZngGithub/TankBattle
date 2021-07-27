@@ -13,6 +13,7 @@ public class EnemyTank extends MyTank {
 
     public Vector<Bullet> bullets = new Vector<>();
 
+
     public EnemyTank(int x, int y) {
         super(x, y, 2, 6, 1);
     }
