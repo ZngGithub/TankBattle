@@ -14,7 +14,6 @@ import java.util.List;
 public class MyTank extends Tank{
     private Bullet bullet;
 
-
     public MyTank(int x, int y, int direction, int moveNum, int type) {
         super(x, y, direction, moveNum, type);
     }

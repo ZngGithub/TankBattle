@@ -52,8 +52,8 @@ public class Bullet implements Runnable{
                 break;
             }
         }
-        if (!isLive) {
-            System.out.println("子弹绘画退出");
-        }
+//        if (!isLive) {
+//            System.out.println("子弹绘画退出");
+//        }
     }
 }
