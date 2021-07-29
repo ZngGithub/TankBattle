@@ -12,7 +12,7 @@ import java.util.List;
  */
 @Data
 public class MyTank extends Tank{
-    private Bullet bullet;
+    public Bullet bullet;
 
     public MyTank(int x, int y, int direction, int moveNum, int type) {
         super(x, y, direction, moveNum, type);

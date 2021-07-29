@@ -15,7 +15,7 @@ public class Explode {
     private int y;
     // 生命周期
     private int life = 9;
-    private boolean isLive = false;
+    private boolean isLive = true;
 
     public Explode(int x, int y) {
         this.x = x;

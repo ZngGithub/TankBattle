@@ -1,5 +1,6 @@
 package com.zzs.tankgame;
 
+import com.sun.xml.internal.bind.v2.TODO;
 import lombok.Data;
 
 import javax.swing.*;
@@ -23,6 +24,7 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
 
     private int enemyNum = 3; // 默认三个敌人
 
+    private int explodesSize = 3; // 炸弹数量
     private Vector<Explode> explodes = new Vector<>();
 
     // 定义炸弹图片
@@ -37,6 +39,7 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
         // 初始化敌方坦克
         for (int i = 0; i < enemyNum; i++) {
             EnemyTank enemyTank = new EnemyTank(i * 100, 0);
+            new Thread(enemyTank).start();
             // 初始化子弹 默认朝下
             Bullet bullet = new Bullet(enemyTank.getX() + 20, enemyTank.getY() + 60, enemyTank.getDirection());
             enemyTank.bullets.add(bullet);
@@ -56,6 +59,14 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
         g.fillRect(0, 0, 1000, 750); // 填充矩形默认黑色
         // 画出已方坦克
         drawTank(myTank.getX(), myTank.getY(), g, myTank.getDirection(), myTank.getType());
+
+        // 绘画子弹
+        if (myTank.getBullet() != null && myTank.getBullet().isLive()) {
+            g.setColor(Color.white);
+//            g.fill3DRect(myTank.getBullet().getX(), myTank.getBullet().getY(), 10, 10, false);
+            g.draw3DRect(myTank.getBullet().getX(), myTank.getBullet().getY(), 10, 10, false);
+        }
+
         // 绘画出爆炸效果
         for (int i = 0; i < explodes.size(); i++) {
             Explode explode = explodes.get(i);
@@ -87,18 +98,8 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
                 }
             }
         }
-
-        // 绘画子弹
-        if (myTank.getBullet() != null && myTank.getBullet().isLive()) {
-            g.setColor(Color.white);
-//            g.fill3DRect(myTank.getBullet().getX(), myTank.getBullet().getY(), 10, 10, false);
-            g.draw3DRect(myTank.getBullet().getX(), myTank.getBullet().getY(), 10, 10, false);
-        }
     }
 
-//    public void paintingExplosion(Vector<Explode> vector, Graphics g) {
-//
-//    }
 
     /**
      * 子弹碰到坦克，坦克消失
@@ -106,26 +107,34 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
      * @param enemyTank
      */
     public void tankVanish(Bullet b, EnemyTank enemyTank) {
-        int direction = enemyTank.getDirection();
-        // 向上向下
-        if (direction == 0 || direction == 2) {
-            if (b.getX() > enemyTank.getX() && b.getX() < enemyTank.getX() + 40 &&
-                    b.getY() > enemyTank.getY() && b.getY() < enemyTank.getY() + 60) {
-                enemyTank.isLife = false;
-                b.isLive = false;
-                Explode explode = new Explode(enemyTank.getX(), enemyTank.getY());
-                explode.setLive(true);
-                explodes.add(explode);
-            }
-        } else { // 左右
-            if (b.getX() > enemyTank.getX() && b.getX() <  enemyTank.getX() + 60 &&
-                    b.getY() > enemyTank.getY() && b.getY() < enemyTank.getY() + 40) {
-                enemyTank.isLife = false;
-                b.isLive = false;
-                Explode explode = new Explode(enemyTank.getX(), enemyTank.getY());
-                explode.setLive(true);
-                explodes.add(explode);
-            }
+        // TODO 这里有问题
+        switch (enemyTank.getDirection()) {
+            case 0:
+            case 1:
+            case 2:
+                if (b.getX() > enemyTank.getX() && b.getX() < enemyTank.getX() + 40 &&
+                        b.getY() > enemyTank.getY() && b.getY() < enemyTank.getY() + 60) {
+                    enemyTank.isLife = false;
+                    // 删除坦克
+                    enemyTanks.remove(enemyTank);
+                    b.isLive = false;
+                    Explode explode = new Explode(enemyTank.getX(), enemyTank.getY());
+                    explode.setLive(false);
+                    explodes.add(explode);
+                    break;
+                }
+            case 3:
+                if (b.getX() > enemyTank.getX() && b.getX() <  enemyTank.getX() + 60 &&
+                        b.getY() > enemyTank.getY() && b.getY() < enemyTank.getY() + 40) {
+                    enemyTank.isLife = false;
+                    // 删除坦克
+                    enemyTanks.remove(enemyTank);
+                    b.isLive = false;
+                    Explode explode = new Explode(enemyTank.getX(), enemyTank.getY());
+                    explode.setLive(false);
+                    explodes.add(explode);
+                }
+                break;
         }
     }
 
@@ -191,18 +200,25 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
         // WSAD 进行坦克方向处理, 处理坐标
         if (e.getKeyCode() == KeyEvent.VK_W) {
             myTank.setDirection(0);
-            myTank.moveUp();
+            if (myTank.getY() > 0) {
+                myTank.moveUp();
+            }
         } else if (e.getKeyCode() == KeyEvent.VK_D) {
             myTank.setDirection(1);
-            myTank.moveRight();
+            if (myTank.getX() + 60 < 1000) {
+                myTank.moveRight();
+            }
         } else if (e.getKeyCode() == KeyEvent.VK_S) {
             myTank.setDirection(2);
-            myTank.moveDown();
+            if (myTank.getY() + 60 < (750-60)) {
+                myTank.moveDown();
+            }
         } else if (e.getKeyCode() == KeyEvent.VK_A) {
             myTank.setDirection(3);
-            myTank.moveLeft();
+            if (myTank.getX() > 0) {
+                myTank.moveLeft();
+            }
         }
-
         if (e.getKeyCode() == KeyEvent.VK_J) {
             for (int i = 0; i < 100; i++) {
                 // 发射子弹
@@ -228,17 +244,13 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
                 e.printStackTrace();
             }
             // 我方子弹没有击中判断
-            if (myTank.getBullet() != null && myTank.getBullet().isLive) {
-//                for (EnemyTank enemyTank : enemyTanks) {
-//                    tankVanish(myTank.getBullet(), enemyTank);
-//                }
+            if (myTank.bullet != null && myTank.bullet.isLive) {
                 for (int i = 0; i < enemyTanks.size(); i++) {
                     EnemyTank enemyTank = enemyTanks.get(i);
-                    tankVanish(myTank.getBullet(), enemyTank);
+                    tankVanish(myTank.bullet, enemyTank);
                 }
             }
-
-            // 原则重绘子弹
+            // 重绘子弹
             this.repaint();
         }
     }

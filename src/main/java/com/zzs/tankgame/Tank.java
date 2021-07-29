@@ -47,6 +47,12 @@ public class Tank {
         this.x -= moveNum;
     }
 
-
-
+//    /**
+//     * 移动范围限制
+//     */
+//    public void scopLimitation() {
+//        if (this.x >= 1000 || this.y >= 750) {
+//            System.out.println("已超");
+//        }
+//    }
 }
